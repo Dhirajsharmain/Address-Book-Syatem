@@ -66,7 +66,7 @@ public class AddressBookMain {
 
     /**
      * Method for taking person details and store them into storage.
-     * In this program used hashmap.
+     * In this program used hashmap. Multiple person can add.
      */
     private static void addPersonDetail(){
         Person person;
