@@ -42,13 +42,14 @@ public class AddressBookMain {
                     break;
                 case 'E':
                     //edit
+                    editContact();
                     break;
                 case 'D':
                     //delete
                     break;
                 case 'S':
                     //Show
-                    System.out.println("\n\t\t" + personMap.get(personMap.size() - 1).toString());
+                    System.out.println("\n\t\t" + personMap.toString());
                     break;
                 case 'Q':
                     //quit
@@ -68,6 +69,36 @@ public class AddressBookMain {
      */
     private static void addPersonDetail(){
         Person person = new Person();
+        person = contactFields();
+        personMap.put(person.getFirstName(),person);
+        System.out.println(personMap.toString());
+    }
+
+    /**
+     * Method For editing the existing person details on the basis of first name.
+     */
+    private static void editContact(){
+        System.out.print("\nEnter the first name of the person to edit : ");
+        String firstName = scanner.nextLine();
+        Person newPerson = personMap.get(firstName);
+        System.out.println(newPerson.toString());
+        if (personMap.get(firstName) != null){
+            Person person = contactFields();
+            for (int j = 0; j < personMap.size(); j++) {
+                if (personMap.get(firstName).getFirstName().equalsIgnoreCase(newPerson.getFirstName())) {
+                    personMap.put(person.getFirstName(), person);
+                }
+            }
+        }
+        System.out.println("\n\t\t" + personMap.toString());
+    }
+
+    /**
+     * Method for taking person details in Person-Model format.
+     * @return : Person Object
+     */
+    private static Person contactFields(){
+        Person person = new Person();
         System.out.print("Enter First Name : ");
         person.setFirstName(scanner.nextLine());
         System.out.print("Enter Last Name : ");
@@ -80,8 +111,6 @@ public class AddressBookMain {
         person.setZip(scanner.nextLine());
         System.out.print("Enter Phone Number : ");
         person.setPhone(scanner.nextLine());
-
-        personMap.put(person.getFirstName(),person);
-        System.out.println(personMap.toString());
+        return person;
     }
 }
