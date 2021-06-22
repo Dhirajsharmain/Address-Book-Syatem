@@ -1,10 +1,19 @@
+/**
+ * ****************************************************************************
+ * Purpose: The purpose of this class to create Address Book System and add
+ * multiple persons details with their state or city reference.
+ *
+ * @author Dhiraj
+ * @version 1.0
+ * @since 22-06-2021 **********************************************************
+ */
 package bridgelabz.services;
 
 import bridgelabz.model.Person;
 
 import java.util.*;
 
-public class AddressBook {
+public class AddressBookMain {
     private static Scanner scanner = new Scanner(System.in);
     private static Map<String ,Person> personMap = new HashMap();
 
