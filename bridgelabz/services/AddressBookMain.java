@@ -23,7 +23,43 @@ public class AddressBookMain {
      * @param args
      */
     public static void main(String[] args){
-            addPersonDetail();
+
+        boolean isExit = false;
+
+        do {
+            System.out.println("\n\t\tAddress Book System");
+            System.out.println("\n\t\tEnter A to Add Person ");
+            System.out.println("\t\tEnter E to Edit Person");
+            System.out.println("\t\tEnter D to Delete Person");
+            System.out.println("\t\tEnter S to Show Person Detail");
+            System.out.println("\t\tEnter Q to Quit ");
+            System.out.print("\t\tPlease Select One Option : ");
+            char userInput = scanner.nextLine().toUpperCase().charAt(0);
+            switch (userInput) {
+                case 'A':
+                    //add
+                    addPersonDetail();
+                    break;
+                case 'E':
+                    //edit
+                    break;
+                case 'D':
+                    //delete
+                    break;
+                case 'S':
+                    //Show
+                    System.out.println("\n\t\t" + personMap.get(personMap.size() - 1).toString());
+                    break;
+                case 'Q':
+                    //quit
+                    isExit = true;
+                    break;
+                default:
+                    System.out.println("Please select correct option");
+            }
+        } while (!isExit);
+
+
     }
 
     /**
