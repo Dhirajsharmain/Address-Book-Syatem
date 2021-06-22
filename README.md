@@ -12,4 +12,9 @@ _Description_ : Ability to add a new Contact to Address Book
 
 **UC3-EditExistingContact**
 
-_Description_ : Ability to edit existing contact person using their name - Use Console to edit person details
+_Description_ : Ability to edit existing contact person using their name - Use Console to edit person details.
+
+**UC4-DeleteAPerson**
+
+_Description_ : Ability to delete a person using person's name 
+- Use Console to delete a person
