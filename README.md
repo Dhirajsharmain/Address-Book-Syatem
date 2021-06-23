@@ -24,3 +24,9 @@ _Description_ : Ability to delete a person using person's name
 _Description_ : Ability to add multiple person to Address Book
 - Use Console to add person details one at a time
 - Use Collection Class to maintain multiple contact persons in Address Book
+
+**UC6-AddMultipleAddressBook**
+
+_Description_ : Refactor to add multiple Address Book to the System. Each Address Book has a unique Name 
+- Use Console to add new Address Book 
+- Maintain Dictionary of Address Book Name to Address Book

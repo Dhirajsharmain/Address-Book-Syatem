@@ -11,18 +11,21 @@ package bridgelabz.services;
 
 import bridgelabz.model.Person;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class AddressBookMain {
     private static Scanner scanner = new Scanner(System.in);
-    private static Map<String ,Person> personMap = new HashMap();
+    private static Map<String, Person> personMap = new HashMap();
+    private static Map<String, Map<String, Person>> addressBookMap = new HashMap();
 
     /**
      * This is the main method, Here is the starting point of the program.
      *
      * @param args
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         boolean isExit = false;
 
@@ -38,7 +41,7 @@ public class AddressBookMain {
             switch (userInput) {
                 case 'A':
                     //add
-                    addPersonDetail();
+                    addBook();
                     break;
                 case 'E':
                     //edit
@@ -64,43 +67,34 @@ public class AddressBookMain {
 
     }
 
-    /**
-     * Method for taking person details and store them into storage.
-     * In this program used hashmap. Multiple person can add.
-     */
-    private static void addPersonDetail(){
-        Person person;
-        person = contactFields();
-        personMap.put(person.getFirstName(),person);
-        System.out.println(personMap.toString());
-    }
 
     /**
      * Method For editing the existing person details on the basis of first name.
      */
-    private static void editContact(){
+    private static void editContact() {
         System.out.print("\nEnter the first name of the person to edit : ");
         String firstName = scanner.nextLine();
-        Person newPerson = personMap.get(firstName);
-        System.out.println(newPerson.toString());
-        if (personMap.get(firstName) != null){
-            Person person = contactFields();
-            for (int j = 0; j < personMap.size(); j++) {
-                if (personMap.get(firstName).getFirstName().equalsIgnoreCase(newPerson.getFirstName())) {
-                    personMap.put(person.getFirstName(), person);
-                }
-            }
-        }else {
+        System.out.print("\nEnter the city name of the person to edit : ");
+        String cityName = scanner.nextLine();
+        personMap = addressBookMap.get(cityName);
+        ;
+        System.out.println(personMap.toString());
+        if (addressBookMap.get(cityName).get(firstName) != null) {
+            Person editedPerson = contactFields();
+            personMap.put(editedPerson.getFirstName(), editedPerson);
+            addressBookMap.put(editedPerson.getCity(), personMap);
+        } else {
             System.out.println("Record Not Found");
         }
-        System.out.println("\n\t\t" + personMap.toString());
+        System.out.println("\n\t\t" + addressBookMap.toString());
     }
 
     /**
      * Method for taking person details in Person-Model format.
+     *
      * @return : Person Object
      */
-    private static Person contactFields(){
+    private static Person contactFields() {
         Person person = new Person();
         System.out.print("Enter First Name : ");
         person.setFirstName(scanner.nextLine());
@@ -125,12 +119,31 @@ public class AddressBookMain {
         String firstName = scanner.nextLine();
         Person newPerson = personMap.get(firstName);
         System.out.println(newPerson.toString());
-        if (newPerson != null) {
+        if (personMap.get(firstName) != null) {
             personMap.remove(firstName);
             System.out.println("Deleted Successfully");
         } else {
             System.out.println("Record not exist");
         }
 
+    }
+
+    /**
+     * Method for taking person details and store them into storage with
+     * their city name reference.
+     * In this program used hashmap. Multiple person can add.
+     */
+    private static void addBook() {
+        Map<String, Person> newPersonMap = new HashMap();
+        Person newPerson;
+        newPerson = contactFields();
+
+        if (addressBookMap.get(newPerson.getCity()) != null)
+            newPersonMap = addressBookMap.get(newPerson.getCity());
+
+        newPersonMap.put(newPerson.getFirstName(), newPerson);
+        addressBookMap.put(newPerson.getCity(), newPersonMap);
+
+        System.out.println("\n\t\t" + addressBookMap.toString());
     }
 }
