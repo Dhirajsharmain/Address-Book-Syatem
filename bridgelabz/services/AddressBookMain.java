@@ -53,7 +53,7 @@ public class AddressBookMain {
                     break;
                 case 'S':
                     //Show
-                    System.out.println("\n\t\t" + personMap.toString());
+                    System.out.println("\n\t\t" + addressBookMap.toString());
                     break;
                 case 'Q':
                     //quit
@@ -115,12 +115,14 @@ public class AddressBookMain {
      * Method for deleting the person from existing address book
      */
     private static void deletePerson() {
-        System.out.print("\nEnter the first name of the person to delete : ");
+        System.out.print("\nEnter the first name of the person to edit : ");
         String firstName = scanner.nextLine();
-        Person newPerson = personMap.get(firstName);
+        System.out.print("\nEnter the city name of the person to edit : ");
+        String cityName = scanner.nextLine();
+        Person newPerson = addressBookMap.get(cityName).get(firstName);
         System.out.println(newPerson.toString());
-        if (personMap.get(firstName) != null) {
-            personMap.remove(firstName);
+        if (addressBookMap.get(cityName).get(firstName) != null) {
+            addressBookMap.get(cityName).remove(firstName);
             System.out.println("Deleted Successfully");
         } else {
             System.out.println("Record not exist");
