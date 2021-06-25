@@ -43,3 +43,9 @@ _Description_ : Ability to ensure there is no Duplicate Entry of the same Person
 _Description_ : Ability to search Person in a City or State across the multiple AddressBook 
 - Search Result can show multiple person in the city or state
 - Use Java Streams
+
+**UC9-ViewPersonByCity**
+
+Ability to view Persons by City or State - Maintain Dictionary of City and Person as well as State and Person
+- Use Collection Library to maintain Dictionary
+- Use Java Streams
