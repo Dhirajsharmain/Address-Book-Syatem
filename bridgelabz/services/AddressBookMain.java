@@ -162,7 +162,13 @@ public class AddressBookMain {
         System.out.println("\n\t\t" + addressBookMap.toString());
     }
 
+    /**
+     * Method for search person in a city across address book by using stream.
+     * @param city : name of city to be search.
+     */
     private static void searchPerson(String city) {
-        addressBookMap.entrySet().stream().filter(e ->e.getKey().equalsIgnoreCase(city)).forEach(m -> System.out.println(m));
+        addressBookMap.entrySet().stream()
+                .filter(e ->e.getKey().equalsIgnoreCase(city))
+                .forEach(m -> System.out.println(m));
     }
 }
