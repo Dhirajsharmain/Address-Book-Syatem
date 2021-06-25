@@ -34,7 +34,8 @@ public class AddressBookMain {
             System.out.println("\n\t\tEnter A to Add Person ");
             System.out.println("\t\tEnter E to Edit Person");
             System.out.println("\t\tEnter D to Delete Person");
-            System.out.println("\t\tEnter S to Show Person Detail");
+            System.out.println("\t\tEnter S to Search Person");
+            System.out.println("\t\tEnter P to Print Address Book");
             System.out.println("\t\tEnter Q to Quit ");
             System.out.print("\t\tPlease Select One Option : ");
             char userInput = scanner.nextLine().toUpperCase().charAt(0);
@@ -53,14 +54,20 @@ public class AddressBookMain {
                     break;
                 case 'D':
                     //delete
-                    System.out.print("\nEnter the first name of the person to edit : ");
+                    System.out.print("\nEnter the first name of the person to delete : ");
                     String personName = scanner.nextLine();
-                    System.out.print("\nEnter the city name of the person to edit : ");
+                    System.out.print("\nEnter the city name of the person to delete : ");
                     String city = scanner.nextLine();
                     deletePerson(personName,city);
                     break;
                 case 'S':
-                    //Show
+                    //Search
+                    System.out.print("\nEnter the city name of the person to search : ");
+                    String pCity = scanner.nextLine();
+                    searchPerson(pCity);
+                    break;
+                case 'P':
+                    //print
                     System.out.println("\n\t\t" + addressBookMap.toString());
                     break;
                 case 'Q':
@@ -153,5 +160,9 @@ public class AddressBookMain {
         addressBookMap.put(newPerson.getCity(), newPersonMap);
 
         System.out.println("\n\t\t" + addressBookMap.toString());
+    }
+
+    private static void searchPerson(String city) {
+        addressBookMap.entrySet().stream().filter(e ->e.getKey().equalsIgnoreCase(city)).forEach(m -> System.out.println(m));
     }
 }

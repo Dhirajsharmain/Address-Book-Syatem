@@ -37,3 +37,9 @@ _Description_ : Ability to ensure there is no Duplicate Entry of the same Person
 - Duplicate Check is done on Person Name while adding person to Address Book.
 - Use Collection Methods to Search Person by Name for Duplicate Entry
 - Override equals method to check for Duplicate - Use Java Streams
+
+**UC8-SearchPerson**
+
+_Description_ : Ability to search Person in a City or State across the multiple AddressBook 
+- Search Result can show multiple person in the city or state
+- Use Java Streams
