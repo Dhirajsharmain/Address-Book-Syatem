@@ -45,11 +45,19 @@ public class AddressBookMain {
                     break;
                 case 'E':
                     //edit
-                    editContact();
+                    System.out.print("\nEnter the first name of the person to edit : ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("\nEnter the city name of the person to edit : ");
+                    String cityName = scanner.nextLine();
+                    editContact(firstName,cityName);
                     break;
                 case 'D':
                     //delete
-                    deletePerson();
+                    System.out.print("\nEnter the first name of the person to edit : ");
+                    String personName = scanner.nextLine();
+                    System.out.print("\nEnter the city name of the person to edit : ");
+                    String city = scanner.nextLine();
+                    deletePerson(personName,city);
                     break;
                 case 'S':
                     //Show
@@ -64,20 +72,14 @@ public class AddressBookMain {
             }
         } while (!isExit);
 
-
     }
 
 
     /**
      * Method For editing the existing person details on the basis of first name.
      */
-    private static void editContact() {
-        System.out.print("\nEnter the first name of the person to edit : ");
-        String firstName = scanner.nextLine();
-        System.out.print("\nEnter the city name of the person to edit : ");
-        String cityName = scanner.nextLine();
+    private static void editContact(String firstName, String cityName) {
         personMap = addressBookMap.get(cityName);
-        ;
         System.out.println(personMap.toString());
         if (addressBookMap.get(cityName).get(firstName) != null) {
             Person editedPerson = contactFields();
@@ -98,14 +100,22 @@ public class AddressBookMain {
         Person person = new Person();
         System.out.print("Enter First Name : ");
         person.setFirstName(scanner.nextLine());
+
         System.out.print("Enter Last Name : ");
         person.setLastName(scanner.nextLine());
+
         System.out.print("Enter Address : ");
         person.setAddress(scanner.nextLine());
+
+        System.out.print("Enter State : ");
+        person.setState(scanner.nextLine());
+
         System.out.print("Enter City : ");
         person.setCity(scanner.nextLine());
+
         System.out.print("Enter ZipCode : ");
         person.setZip(scanner.nextLine());
+
         System.out.print("Enter Phone Number : ");
         person.setPhone(scanner.nextLine());
         return person;
@@ -114,11 +124,7 @@ public class AddressBookMain {
     /**
      * Method for deleting the person from existing address book
      */
-    private static void deletePerson() {
-        System.out.print("\nEnter the first name of the person to edit : ");
-        String firstName = scanner.nextLine();
-        System.out.print("\nEnter the city name of the person to edit : ");
-        String cityName = scanner.nextLine();
+    private static void deletePerson(String firstName, String cityName) {
         Person newPerson = addressBookMap.get(cityName).get(firstName);
         System.out.println(newPerson.toString());
         if (addressBookMap.get(cityName).get(firstName) != null) {
