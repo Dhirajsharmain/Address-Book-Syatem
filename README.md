@@ -46,6 +46,12 @@ _Description_ : Ability to search Person in a City or State across the multiple 
 
 **UC9-ViewPersonByCity**
 
-Ability to view Persons by City or State - Maintain Dictionary of City and Person as well as State and Person
+_Description_ : Ability to view Persons by City or State - Maintain Dictionary of City and Person as well as State and Person
 - Use Collection Library to maintain Dictionary
+- Use Java Streams
+
+**UC10-NumberOfContactPersons**
+
+_Description_ : Ability to get number of contact persons i.e. count by City or State
+- Search Result will show count by city and by state
 - Use Java Streams
