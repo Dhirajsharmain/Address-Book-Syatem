@@ -12,9 +12,12 @@ package bridgelabz.services;
 import bridgelabz.model.Person;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
+
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.stream.Collectors.toMap;
 
 public class AddressBookMain {
     private static Scanner scanner = new Scanner(System.in);
@@ -37,7 +40,7 @@ public class AddressBookMain {
             System.out.println("\t\tEnter D to Delete Person");
             System.out.println("\t\tEnter S to Search Person");
             System.out.println("\t\tEnter C to Count Persons In City");
-            System.out.println("\t\tEnter P to Print Address Book");
+            System.out.println("\t\tEnter P to Print Address Book With and Without Sorting");
             System.out.println("\t\tEnter Q to Quit ");
             System.out.print("\t\tPlease Select One Option : ");
             char userInput = scanner.nextLine().toUpperCase().charAt(0);
@@ -75,7 +78,11 @@ public class AddressBookMain {
                     break;
                 case 'P':
                     //print
-                    System.out.println("\n\t\t" + addressBookMap.toString());
+                    System.out.print("\nEnter the city name to sort : ");
+                    String sortCity = scanner.nextLine();
+                    System.out.println("\n\t\t Without sorting : " + addressBookMap.toString());
+                    System.out.println("\n\t\t After sorting : " + sortByPersonName(sortCity));
+
                     break;
                 case 'Q':
                     //quit
@@ -190,5 +197,17 @@ public class AddressBookMain {
     private static int personsCountByCity(String city){
         Map<String, Map<String, Person>> personCount = searchPerson(city);
         return personCount.get(city).size();
+    }
+
+    /**
+     * Method for sorting the address book by first name of person
+     * @param city : Name of address book as city of person
+     */
+    private static Map<String, Person> sortByPersonName(String city){
+        Map<String, Person> temp = addressBookMap.get(city);
+        Map<String, Person> sorted = temp.entrySet().stream()
+                .sorted(comparingByKey())
+                .collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
+        return sorted;
     }
 }

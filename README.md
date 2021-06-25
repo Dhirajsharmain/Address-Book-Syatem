@@ -55,3 +55,11 @@ _Description_ : Ability to view Persons by City or State - Maintain Dictionary o
 _Description_ : Ability to get number of contact persons i.e. count by City or State
 - Search Result will show count by city and by state
 - Use Java Streams
+
+**UC11-SortTheEntries**
+
+_Description_ : Ability to sort the entries in the address book alphabetically by Person’s name
+- Use Console to sort person details by name
+- Use Collection Library for Sorting
+- Override toString method to finally Print Person Entry in Console
+- Use Java Streams
