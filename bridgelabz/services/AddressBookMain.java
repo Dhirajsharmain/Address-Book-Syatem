@@ -5,13 +5,17 @@
  *
  * @author Dhiraj
  * @version 1.0
- * @since 22-06-2021 **********************************************************
+ * @since 22-06-2021
+ * ****************************************************************************
  */
 package bridgelabz.services;
 
 import bridgelabz.exception.ValidationException;
 import bridgelabz.model.Person;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -79,6 +83,7 @@ public class AddressBookMain {
                     break;
                 case 'P':
                     //print
+                    writeIntoFile();
                     System.out.print("\nEnter the city name to sort : ");
                     String sortCity = scanner.nextLine();
                     System.out.println("\n\t\t Without sorting : " + addressBookMap.toString());
@@ -119,7 +124,7 @@ public class AddressBookMain {
     }
 
     /**
-     * Method for taking person details in Person-Model format.
+     * Method for taking person details in Person-object format.
      *
      * @return : Person Object
      */
@@ -235,7 +240,7 @@ public class AddressBookMain {
     }
 
     /**
-     * Method for sorting the address book by first name of person
+     * Method for sorting the address book by City name
      */
     private static Map<String, Map<String, Person>> sortByCity() throws ValidationException {
         try {
@@ -243,6 +248,21 @@ public class AddressBookMain {
                     .sorted(comparingByKey())
                     .collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
             return sorted;
+        } catch (Exception e) {
+            throw new ValidationException(e.getMessage());
+        }
+    }
+
+    /**
+     * Method for writing the address book data into a json file using jackson
+     * library.
+     * @throws ValidationException
+     */
+    private static void writeIntoFile() throws ValidationException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.writeValue(new File("outputData.json"),addressBookMap);
+            System.out.println("successfully");
         } catch (Exception e) {
             throw new ValidationException(e.getMessage());
         }
