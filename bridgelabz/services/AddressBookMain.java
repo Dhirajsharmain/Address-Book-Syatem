@@ -12,14 +12,19 @@ package bridgelabz.services;
 
 import bridgelabz.exception.ValidationException;
 import bridgelabz.model.Person;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.stream.Collectors.toMap;
@@ -60,7 +65,7 @@ public class AddressBookMain {
                     String firstName = scanner.nextLine();
                     System.out.print("\nEnter the city name of the person to edit : ");
                     String cityName = scanner.nextLine();
-                    editContact(firstName,cityName);
+                    editContact(firstName, cityName);
                     break;
                 case 'D':
                     //delete
@@ -68,7 +73,7 @@ public class AddressBookMain {
                     String personName = scanner.nextLine();
                     System.out.print("\nEnter the city name of the person to delete : ");
                     String city = scanner.nextLine();
-                    deletePerson(personName,city);
+                    deletePerson(personName, city);
                     break;
                 case 'S':
                     //Search
@@ -83,6 +88,7 @@ public class AddressBookMain {
                     break;
                 case 'P':
                     //print
+                    writeCSVIntoFile("csvOutput.csv");
                     writeIntoFile();
                     System.out.print("\nEnter the city name to sort : ");
                     String sortCity = scanner.nextLine();
@@ -198,6 +204,7 @@ public class AddressBookMain {
 
     /**
      * Method for search person in a city across address book by using stream.
+     *
      * @param city : name of city to be search.
      * @return : Hashmap containing personList of city.
      */
@@ -215,6 +222,7 @@ public class AddressBookMain {
 
     /**
      * Method for counting Number of personList in particular city.
+     *
      * @param city : name of city to be search
      * @return : count
      */
@@ -225,6 +233,7 @@ public class AddressBookMain {
 
     /**
      * Method for sorting the address book by first name of person
+     *
      * @param city : Name of address book as city of person
      */
     private static Map<String, Person> sortByPersonName(String city) throws ValidationException {
@@ -256,15 +265,47 @@ public class AddressBookMain {
     /**
      * Method for writing the address book data into a json file using jackson
      * library.
+     *
      * @throws ValidationException
      */
     private static void writeIntoFile() throws ValidationException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            objectMapper.writeValue(new File("outputData.json"),addressBookMap);
+            objectMapper.writeValue(new File("outputData.json"), addressBookMap);
             System.out.println("successfully");
         } catch (Exception e) {
             throw new ValidationException(e.getMessage());
         }
     }
+
+    /**
+     * Method for writing addressBook data into CSV file using openCSV library.
+     * @param filePath : file name or full file path
+     */
+    private static void writeCSVIntoFile(String filePath) {
+        File file = new File(filePath);
+        try {
+            FileWriter outputfile = new FileWriter(file, true);
+            CSVWriter writer = new CSVWriter(outputfile);
+            Map<String, Map<String, Person>> head = addressBookMap;
+
+            List<Person> list = addressBookMap.entrySet().stream().flatMap(e -> e.getValue().entrySet().stream()).map(m -> m.getValue()).collect(Collectors.toList());
+            list.stream().forEach(e-> System.out.println(e));
+            ColumnPositionMappingStrategy<Person> mappingStrategy = new ColumnPositionMappingStrategy<Person>();
+            mappingStrategy.setType(Person.class);
+
+            String[] columns = new String[]{"firstName", "lastName", "address", "city", "state", "zip", "phone"};
+            mappingStrategy.setColumnMapping(columns);
+
+            StatefulBeanToCsvBuilder<Person> builder = new StatefulBeanToCsvBuilder<Person>(writer);
+
+            StatefulBeanToCsv<Person> beanWriter = builder.withMappingStrategy(mappingStrategy).build();
+            beanWriter.write(list);
+
+            //writer.close();
+        } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
