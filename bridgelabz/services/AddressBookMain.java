@@ -12,16 +12,14 @@ package bridgelabz.services;
 
 import bridgelabz.exception.ValidationException;
 import bridgelabz.model.Person;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opencsv.CSVWriter;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +37,7 @@ public class AddressBookMain {
      *
      * @param args
      */
-    public static void main(String[] args) throws ValidationException {
+    public static void main(String[] args) throws ValidationException, IOException {
 
         boolean isExit = false;
 
@@ -96,6 +94,9 @@ public class AddressBookMain {
                     System.out.println("\n\t\t Sorted By Person Name : " + sortByPersonName(sortCity));
                     System.out.println("\n\t\t sorted By City : " + sortByCity());
 
+                    break;
+                case 'R':
+                    readCSV("csvOutput.csv");
                     break;
                 case 'Q':
                     //quit
@@ -280,32 +281,61 @@ public class AddressBookMain {
 
     /**
      * Method for writing addressBook data into CSV file using openCSV library.
+     *
      * @param filePath : file name or full file path
      */
-    private static void writeCSVIntoFile(String filePath) {
+    private static void writeCSVIntoFile(String filePath) throws ValidationException {
         File file = new File(filePath);
         try {
-            FileWriter outputfile = new FileWriter(file, true);
-            CSVWriter writer = new CSVWriter(outputfile);
-            Map<String, Map<String, Person>> head = addressBookMap;
-
             List<Person> list = addressBookMap.entrySet().stream().flatMap(e -> e.getValue().entrySet().stream()).map(m -> m.getValue()).collect(Collectors.toList());
-            list.stream().forEach(e-> System.out.println(e));
-            ColumnPositionMappingStrategy<Person> mappingStrategy = new ColumnPositionMappingStrategy<Person>();
-            mappingStrategy.setType(Person.class);
+            list.stream().forEach(e -> System.out.println(e));
 
-            String[] columns = new String[]{"firstName", "lastName", "address", "city", "state", "zip", "phone"};
-            mappingStrategy.setColumnMapping(columns);
+            CsvMapper mapper = new CsvMapper();
+            mapper.configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true);
 
-            StatefulBeanToCsvBuilder<Person> builder = new StatefulBeanToCsvBuilder<Person>(writer);
+            CsvSchema schema = CsvSchema.builder().setUseHeader(true)
+                    .addColumn("firstName")
+                    .addColumn("lastName")
+                    .addColumn("address")
+                    .addColumn("city")
+                    .addColumn("state")
+                    .addColumn("zip")
+                    .addColumn("phone")
+                    .build();
 
-            StatefulBeanToCsv<Person> beanWriter = builder.withMappingStrategy(mappingStrategy).build();
-            beanWriter.write(list);
+            ObjectWriter writer = mapper.writerFor(Person.class).with(schema);
 
-            //writer.close();
-        } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-            e.printStackTrace();
+            writer.writeValues(file).writeAll(list);
+
+            System.out.println("Users saved to csv file under path: " + file);
+        } catch (IOException e) {
+            throw new ValidationException(e.getMessage());
         }
+    }
+
+    /**
+     * Method for reading CSV file into program
+     * @param filePath : file path
+     * @throws IOException
+     */
+    private static void readCSV(String filePath) throws IOException {
+        File csvFile = new File(filePath);
+
+        CsvMapper csvMapper = new CsvMapper();
+
+        CsvSchema csvSchema = csvMapper
+                .typedSchemaFor(Person.class)
+                .withHeader()
+                .withColumnSeparator(',')
+                .withComments();
+
+        MappingIterator<Person> addressBookItem = csvMapper
+                .readerWithTypedSchemaFor(Person.class)
+                .with(csvSchema)
+                .readValues(csvFile);
+
+        List<Person> users = addressBookItem.readAll();
+        users.forEach(System.out::println);
     }
 
 }
